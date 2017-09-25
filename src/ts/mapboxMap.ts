@@ -160,8 +160,6 @@ module powerbi.extensibility.visual {
             var features = [];
 
             if (numerical_domain.length > 0) {
-            	var limits = chroma.limits(numerical_domain, 'q', 8);
-            	var scale = chroma.scale('YlGnBu').domain(limits);
 
             	datas.map(function (d) {
             		if ( (d.latitude >= -90) && (d.latitude <= 90) && (d.longitude >= -180) && (d.longitude <= 180) ) {
@@ -172,15 +170,14 @@ module powerbi.extensibility.visual {
 		                        "coordinates": [d.longitude, d.latitude]
 		                    },
 		                    "properties": {
-		                        "color": (d.category) ? scale(d.category).toString() : null,
-		                        "tooltip": (d.category) ? d.category.toString() : null
+		                        "tooltip": (d.category) ? d.category : null
 		                    }
 		                }
 		                features.push(feat)
 	            }
             	});
 
-            	calcCircleColorLegend(scale.colors(8), limits, "Measure");
+            	//calcCircleColorLegend(scale.colors(8), limits, "Measure");
 	        }
 	        else if (categorical_domain.length > 0) {
 	        	var scale = chroma.scale('Set2').domain([0, categorical_domain.length]);
@@ -196,8 +193,7 @@ module powerbi.extensibility.visual {
 		                        "coordinates": [d.longitude, d.latitude]
 		                    },
 		                    "properties": {
-		                        "color": (d.category) ? scale(position).toString() : null,
-		                        "tooltip": (d.category) ? d.category.toString() : null
+		                        "tooltip": (d.category) ? d.category : null
 		                    }
 		                }
 		                features.push(feat)
@@ -205,7 +201,7 @@ module powerbi.extensibility.visual {
             	});
         	    let length = categorical_domain.length
         	    let legnend_length = length < 8 ? length : 8
-            	calcCircleColorLegend(scale.colors(legnend_length), categorical_domain.slice(0,legnend_length), "Measure");
+            	//calcCircleColorLegend(scale.colors(legnend_length), categorical_domain.slice(0,legnend_length), "Measure");
 	        }
 
             return features;
@@ -248,20 +244,12 @@ module powerbi.extensibility.visual {
             function onUpdate() {
                 if (_this.map.getSource('data1')) {
                     let source1 : any = _this.map.getSource('data1');
-                    let source2 : any = _this.map.getSource('data2');
-                    source1.setData( turf.featureCollection(features.slice(0,Math.floor(features.length/2))) );
-                    source2.setData( turf.featureCollection(features.slice(Math.floor(features.length/2), features.length)) );
+                    source1.setData( turf.featureCollection(features));
                 }
                 else {
                     _this.map.addSource('data1', {
                         type: "geojson", 
-                        data: turf.featureCollection(features.slice(0,Math.floor(features.length/2))),
-                        buffer: 10
-                    });
-
-                    _this.map.addSource('data2', {
-                        type: "geojson", 
-                        data: turf.featureCollection(features.slice(Math.floor(features.length/2), features.length)),
+                        data: turf.featureCollection(features),
                         buffer: 10
                     });
 
@@ -287,33 +275,32 @@ module powerbi.extensibility.visual {
                     }, 'waterway-label');
 
                     _this.map.addLayer({
-                        id: "circle-1",
+                        id: "heatmap-1",
                         source: 'data1',
-                        type: "circle",
+                        type: "heatmap",
                         paint: {
-                            "circle-color": {
-                                "property": "color",
-                                "type": "identity"
-                            },
-                            "circle-radius": {
+                            "heatmap-radius": {
                                 "stops": [
-                                [0,0.1],[3,3],[12,4],[15,8],[20,26]]
-                            }
-                        }
-                    }, 'waterway-label');
-
-                    _this.map.addLayer({
-                        id: "circle-2",
-                        source: 'data2',
-                        type: "circle",
-                        paint: {
-                            "circle-color": {
-                                "property": "color",
-                                "type": "identity"
+                                    [0,1], 
+                                    [10,20], 
+                                    [18,50]
+                                ]
                             },
-                            "circle-radius": {
+                            "heatmap-intensity": {
                                 "stops": [
-                                [0,0.1],[3,3],[12,4],[15,8],[20,26]]
+                                    [8, 0.01],
+                                    [12, 0.5],
+                                    [18,1]
+                                ]
+                            },
+                            "heatmap-weight": {
+                                "property": "tooltip",
+                                "type": "exponential",
+                                "default": 0,
+                                "stops": [
+                                    [1, 0.8],
+                                    [3, 1]
+                                ]
                             }
                         }
                     }, 'waterway-label');
@@ -328,7 +315,7 @@ module powerbi.extensibility.visual {
                     let minpoint = new Array(e.point['x'] - 5, e.point['y'] - 5)
                     let maxpoint = new Array(e.point['x'] + 5, e.point['y'] + 5)
                     let features : any = _this.map.queryRenderedFeatures([minpoint, maxpoint], {
-                        layers: ['circle-1', 'circle-2']
+                        layers: ['heatmap-1']
                     });
 
                     if (!features.length) {

@@ -900,7 +900,7 @@ declare namespace mapboxgl {
 
 	export interface Layer {
 		id: string;
-		type?: "fill" | "line" | "symbol" | "circle" | "fill-extrusion" | "raster" | "background";
+		type?: "fill" | "line" | "symbol" | "circle" | "heatmap" | "fill-extrusion" | "raster" | "background";
 
 		metadata?: any;
 		ref?: string;
@@ -915,8 +915,8 @@ declare namespace mapboxgl {
 		interactive?: boolean;
 
 		filter?: any[];
-		layout?: BackgroundLayout | FillLayout | FillExtrusionLayout | LineLayout | SymbolLayout | RasterLayout | CircleLayout;
-		paint?: BackgroundPaint | FillPaint | FillExtrusionPaint | LinePaint | SymbolPaint | RasterPaint | CirclePaint;
+		layout?: BackgroundLayout | FillLayout | FillExtrusionLayout | LineLayout | SymbolLayout | RasterLayout | CircleLayout | HeatmapLayout;
+		paint?: BackgroundPaint | FillPaint | FillExtrusionPaint | LinePaint | SymbolPaint | RasterPaint | CirclePaint | HeatmapPaint;
 	}
 
 	export interface StyleFunction {
@@ -1073,6 +1073,19 @@ declare namespace mapboxgl {
 		"circle-stroke-width"?: number | StyleFunction;
 		"circle-stroke-color"?: string | StyleFunction;
 		"circle-stroke-opacity"?: number | StyleFunction;
+	}
+
+	export interface HeatmapLayout {
+		visibility?: "visible" | "none";
+	}
+
+	export interface HeatmapPaint {
+		"heatmap-radius"?: number | StyleFunction;
+		"heatmap-color"?: string | StyleFunction;
+		"heatmap-opacity"?: number | StyleFunction;
+		"heatmap-intensity"?: number | StyleFunction;
+		"heatmap-density"?: number | StyleFunction;
+		"heatmap-weight"?: number | StyleFunction;
 	}
 }
 
