@@ -1,5 +1,7 @@
 # Mapbox GL Extension for PowerBI
 
+## Work in progress - Aiming to add to the Office Store in January 2018
+
 High performance, endlessly customizable, open-source tool based Mapbox GL location visuals for your PowerBI reports and dashboards.
 
 [Example Dashboard](https://app.powerbi.com/view?r=eyJrIjoiMThkYTY1MmItYzMwOC00NjUyLWJhOGMtODZiZWRkNzcxMzY2IiwidCI6IjYyOWE3MGIyLTMyYjktNDEyNi05NTFlLTE3NjA0Y2Y0NTZlYyIsImMiOjF9)
