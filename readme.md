@@ -1,8 +1,8 @@
 # Hey, what's the latest version of this Mapbox Visual for Power BI?
 
-Check out the lastest version, aobut to launch on the Microsoft Office Store, here!  https://github.com/mapbox/mapboxgl-powerbi
+This repository is archived.
 
-
+Check out the lastest code and disribution version (on the Microsoft Office Store!)  https://github.com/mapbox/mapboxgl-powerbi
 
 ## Mapbox GL Extension for PowerBI
 
